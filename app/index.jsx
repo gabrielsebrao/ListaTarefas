@@ -3,9 +3,9 @@ import { useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
 class Task {
-  constructor(content, feito, date) {
+  constructor(content, done, date) {
     this.content = content
-    this.feito = feito
+    this.done = done
     this.date = date
   }
 }
@@ -24,40 +24,40 @@ const tasks = [
   new Task("Comprar garrafa de água ", false, '24/08/2024'),
   new Task("Deveres de Natureza", false, '21/08/2024'),
   new Task("Deveres de Linguagens", false, '21/08/2024'),
-  new Task("", false, '15/08/2024'),
-  new Task("Fazer prova de Redação", false, '15/08/2024'),
-  new Task("Fazer prova de Redação", false, '15/08/2024'),
-  new Task("Fazer prova de Redação", false, '15/08/2024')
+  new Task("Dar comida para o gato", false, '21/08/2024'),
+  new Task("Namorar", false, '23/08/2024'),
+  new Task("Fazer simulado", false, '30/08/2024'),
+  new Task("Ver roupa da formatura", false, '13/10/2024')
 ]
 
 
 const toDo = function () {
-  const [_tarefas, setTarefas] = useState(tasks)
+  const [_tasks, setTasks] = useState(tasks)
 
-  const concluirTarefa = function ({ item }) {
-    tasks[tasks.indexOf(item)].feito = !tasks[tasks.indexOf(item)].feito
-    setTarefas([...tasks]) //Necessário pois sem isso o React ignora a alteração, já que o endereço de memória seria o mesmo. Isso faz uma cópia em outro endereço, basicamente
+  const concludeTask = function ({ item }) {
+    tasks[tasks.indexOf(item)].done = !tasks[tasks.indexOf(item)].done
+    setTasks([...tasks])
   }
 
   const Item = ({ item }) => (
-    <Pressable style={styles.tarefa} onPress={() => concluirTarefa({ item })}>
-      <View style={styles.item} >
-        {!item.feito
-          ? <Text style={styles.listItem}>{item.content}</Text>
-          : <Text style={[styles.listItem, { textDecorationLine: 'line-through' }]}>{item.content}</Text>
+    <Pressable style={style.task} onPress={() => concludeTask({ item })}>
+      <View style={style.item} >
+        {!item.done
+          ? <Text style={style.listItem}>{item.content}</Text>
+          : <Text style={[style.listItem, { textDecorationLine: 'line-through', color: '#ff0000' }]}>{item.content}</Text>
         }
       </View>
     </Pressable >
-  );
+  )
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Lista de Tarefas</Text>
+    <View style={style.container}>
+      <View style={style.content}>
+        <Text style={style.title}>To do</Text>
         <FlatList
-          data={_tarefas}
+          data={_tasks}
           renderItem={({ item }) => <Item item={item} />}
-          style={styles.lista}
+          style={style.list}
         />
       </View>
 
@@ -65,39 +65,43 @@ const toDo = function () {
   )
 }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   listItem: {
     fontSize: 18
   },
+
   item: {
     paddingBottom: 10,
     paddingTop: 10,
     borderBottomColor: '#dddddd',
     borderBottomWidth: 1,
-
   },
+
   title: {
     fontSize: 35,
     fontWeight: 'bold',
     marginBottom: 20,
   },
+
   content: {
     width: '80%',
     marginTop: 50,
   },
-  tarefa: {
+
+  task: {
     backgroundColor: '#ffffff',
   },
 
-  lista: {
+  list: {
     height: '90%',
   }
-});
+})
 
 export default toDo
